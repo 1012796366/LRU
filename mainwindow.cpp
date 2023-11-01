@@ -79,16 +79,21 @@ void MainWindow::processInput(const std::list<int>& pageUsed)
             {
                 QTableWidgetItem *item = new QTableWidgetItem(QString("%1").arg(page));
                 ui->tableResult->setItem(currItem, currEpoch, item);
-                if (page == elem && dataReceived.lackFlag)
-                {
-                    ui->tableResult->item(currItem, currEpoch)->setBackground(Qt::gray);
-                    ui->tableResult->item(currItem, currEpoch)->setForeground(Qt::cyan);
-                }
+                ui->tableResult->item(currItem, currEpoch)->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
                 ++currItem;
+            }
+            QFont fontStyle = ui->tableResult->horizontalHeader()->font();
+            fontStyle.setBold(true);
+            ui->tableResult->horizontalHeader()->setFont(fontStyle);
+            if (dataReceived.lackFlag)
+            {
+                std::cout << "TEST";
+                ui->tableResult->item(0, currEpoch)->setFont(fontStyle);
+                ui->tableResult->item(0, currEpoch)->setBackground(Qt::gray);
+                ui->tableResult->item(0, currEpoch)->setForeground(Qt::black);
             }
             ++currEpoch;
         }
-
         ui->labelNotice->setText(QString("缺页次数：%1").arg(lackCount));
     }
 }
