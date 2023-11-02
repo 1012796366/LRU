@@ -1,8 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <list>
-#include <cstdlib>
 #include "lru.h"
+#include <list>
 #include <iostream>
 #include <sstream>
 #include <string>
