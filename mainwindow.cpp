@@ -60,14 +60,16 @@ void MainWindow::processInput(const std::list<int>& pageUsed)
     }
     else
     {
+        ui->tableResult->clear();
         // 缺页次数，当前轮次
         int lackCount = 0;
         int currEpoch = 0;
         infoPack dataReceived;
         LRU prototype(capacity);
+        QStringList headers;
 
-        ui->tableResult->setRowCount(capacity);                 // 有多少行取决于缓存容量
-        ui->tableResult->setColumnCount(pageUsed.size());       // 有多少列取决于读取次数
+        ui->tableResult->setRowCount(capacity + 1);                 // 有多少行取决于缓存容量，额外多一行用于存储缺页标记
+        ui->tableResult->setColumnCount(pageUsed.size());           // 有多少列取决于读取次数
 
         for (auto elem : pageUsed)
         {
@@ -81,18 +83,34 @@ void MainWindow::processInput(const std::list<int>& pageUsed)
                 ui->tableResult->item(currItem, currEpoch)->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
                 ++currItem;
             }
+
+            headers << QString::number(elem);
+
             QFont fontStyle = ui->tableResult->horizontalHeader()->font();
             fontStyle.setBold(true);
             ui->tableResult->horizontalHeader()->setFont(fontStyle);
             if (dataReceived.lackFlag)
             {
-                std::cout << "TEST";
+                // ==========================================
+                // =          缺页中断 & 页面置换标记         =
+                // ==========================================
+                QTableWidgetItem *item = new QTableWidgetItem(lackCount > capacity ? QString("缺页中断\n页面置换") : QString("缺页中断\n"));
+                ui->tableResult->setItem(capacity, currEpoch, item);
+                ui->tableResult->item(capacity, currEpoch)->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+                // ==========================================
+                // =           字体居中 & 新页标记           =
+                // ==========================================
                 ui->tableResult->item(0, currEpoch)->setFont(fontStyle);
                 ui->tableResult->item(0, currEpoch)->setBackground(Qt::gray);
                 ui->tableResult->item(0, currEpoch)->setForeground(Qt::black);
+                // ==========================================
+                // =              表格宽度自适应             =
+                // ==========================================
+                ui->tableResult->verticalHeader()->setSectionResizeMode(capacity, QHeaderView::ResizeToContents);
             }
             ++currEpoch;
         }
+        ui->tableResult->setHorizontalHeaderLabels(headers);
         ui->labelNotice->setText(QString("缺页次数：%1").arg(lackCount));
     }
 }
