@@ -1,10 +1,11 @@
 #pragma once
 #include <list>
+#include <utility>
 
 class infoPack
 {
 public:
     int lackFlag;
-    std::list<int> cache;
+    std::list<std::pair<int, int>> cache;
 
 };
