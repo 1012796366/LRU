@@ -24,7 +24,6 @@ infoPack LRU::usePage(int id)
 		cache.erase(target->second);
 		target->second = cache.begin();
 
-
 		if (debugFlag)
 		{
 			debugShowElem();
@@ -38,17 +37,17 @@ infoPack LRU::usePage(int id)
     {
         // 不匹配
         // 将其插入到 HashMap 中
-        cache.push_front(id);
-        std::pair<int, std::list<int>::iterator> tempPair(id, cache.begin());
+        // cache.push_front(std::make_pair<int, int>(id, ));
+        cache.push_front(std::make_pair(id, (cache.size() == capacity ? cache.back().second : cache.size())));
+        std::pair<int, std::list<std::pair<int, int>>::iterator> tempPair(id, cache.begin());
         index.emplace(tempPair);
         if (cache.size() > capacity)
         {
             // 缓存中的容量超过了最大容量
-            target = index.find(cache.back());
+            target = index.find(cache.back().first);
             cache.pop_back();
             index.erase(target);
         }
-
 
         if (debugFlag)
         {
