@@ -20,6 +20,6 @@ public:
 private:
     Ui::MainWindow *ui;
     void validInput();
-    void processInput(const std::list<int>& pageUsed);
+    void processInput(const std::list<int>& pageUsed, const int& capacity);
 };
 #endif // MAINWINDOW_H
