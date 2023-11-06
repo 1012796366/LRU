@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <math.h>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -25,10 +26,10 @@ void MainWindow::validInput()
     std::istringstream iss(strInput);
     while (true)
     {
-        if (iss >> page && page >= 0)
+        if (iss >> page)
         {
             // 将要访问到的页插入
-            pageUsed.push_back(page);
+            pageUsed.push_back(abs(page));
         }
         else if (!iss.eof())
         {
@@ -45,7 +46,7 @@ void MainWindow::validInput()
 
     // 尝试读取缓存容量
     auto capacity = ui->lineCapacity->text().toInt(&flag);
-    if (!flag || capacity < 0)
+    if (!flag || capacity <= 0)
     {
         // 缓存容量没有有效数字
         ui->labelNotice->setText("缓存容量不是有效数字，请重新输入！");
